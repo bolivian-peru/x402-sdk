@@ -1,0 +1,16 @@
+{
+  "name": "proxies-sx-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot index.ts",
+    "start": "bun run index.ts"
+  },
+  "dependencies": {
+    "@proxies-sx/x402-hono": "^1.0.0",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  }
+}

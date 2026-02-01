@@ -1,0 +1,31 @@
+{
+  "name": "@proxies-sx/x402-hono",
+  "version": "1.0.0",
+  "description": "x402 payment middleware for Hono (Lucid Agents compatible)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["x402", "hono", "middleware", "lucid-agents", "payments"],
+  "author": "Proxies.sx",
+  "license": "MIT",
+  "peerDependencies": {
+    "hono": ">=4.0.0"
+  },
+  "dependencies": {
+    "@proxies-sx/x402-core": "^1.0.0"
+  },
+  "devDependencies": {
+    "hono": "^4.0.0",
+    "typescript": "^5.3.0"
+  }
+}

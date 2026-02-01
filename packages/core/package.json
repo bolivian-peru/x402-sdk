@@ -1,0 +1,28 @@
+{
+  "name": "@proxies-sx/x402-core",
+  "version": "1.0.0",
+  "description": "Core x402 protocol types and utilities for AI agent payments",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["x402", "micropayments", "ai-agents", "usdc", "base", "solana"],
+  "author": "Proxies.sx",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/proxies-sx/x402-sdk"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}

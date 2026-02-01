@@ -1,0 +1,21 @@
+{
+  "name": "@proxies-sx/x402-sdk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "x402 SDK for AI agent payments - Base & Solana USDC",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces --parallel",
+    "publish:all": "npm publish --workspaces --access public"
+  },
+  "keywords": ["x402", "ai-agents", "micropayments", "usdc", "base", "solana"],
+  "author": "Proxies.sx",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/proxies-sx/x402-sdk"
+  }
+}
