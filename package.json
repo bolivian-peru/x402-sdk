@@ -9,13 +9,21 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces --parallel",
-    "publish:all": "npm publish --workspaces --access public"
+    "publish:all": "npm run build && npm test && npm publish --workspaces --access public",
+    "test": "node scripts/test-packages.mjs"
   },
-  "keywords": ["x402", "ai-agents", "micropayments", "usdc", "base", "solana"],
+  "keywords": [
+    "x402",
+    "ai-agents",
+    "micropayments",
+    "usdc",
+    "base",
+    "solana"
+  ],
   "author": "Proxies.sx",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/proxies-sx/x402-sdk"
+    "url": "https://github.com/bolivian-peru/x402-sdk"
   }
 }

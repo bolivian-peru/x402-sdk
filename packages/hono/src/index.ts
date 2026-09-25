@@ -10,6 +10,7 @@ import {
   parsePaymentHeader,
   detectNetworkFromSignature,
   fromMicroUnits,
+  USDC_ADDRESSES,
   type Network,
   type X402Payment,
   type X402OutputSchema,
@@ -75,6 +76,13 @@ export function x402(options: X402MiddlewareOptions): MiddlewareHandler {
     verifyPayment,
   } = options;
 
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new Error('Payment amount must be a positive finite number');
+  }
+  if (!Object.hasOwn(USDC_ADDRESSES, network)) {
+    throw new Error('Unsupported payment network');
+  }
+
   return async (c: Context, next) => {
     // Get payment signature from headers
     const paymentHeader =
@@ -104,30 +112,35 @@ export function x402(options: X402MiddlewareOptions): MiddlewareHandler {
     // Verify payment
     try {
       let result: VerifyResult;
+      const detectedNetwork = detectNetworkFromSignature(signature);
+      let expectedNetwork = 'evm';
+      if (network.startsWith('solana')) expectedNetwork = 'solana';
 
-      if (verifyPayment) {
+      if (detectedNetwork !== 'unknown' && detectedNetwork !== expectedNetwork) {
+        result = { valid: false, error: 'Payment network mismatch' };
+      } else if (verifyPayment) {
         // Custom verifier
-        const detectedNetwork = detectNetworkFromSignature(signature);
         result = await verifyPayment(signature, detectedNetwork);
       } else {
-        // Default: call Proxies.sx facilitator or accept signature
+        // Default: require successful verification by the Proxies.sx facilitator.
         result = await defaultVerifyPayment(signature, network);
       }
 
-      if (!result.valid) {
+      if (result?.valid !== true) {
         const requirement = buildPaymentRequirement({
           resource: new URL(c.req.url).pathname,
           amount,
           network,
           recipient,
-          description: result.error || 'Payment verification failed',
+          description: result?.error || 'Payment verification failed',
           outputSchema,
         });
         return c.json(requirement, 402);
       }
 
       // Check amount is sufficient
-      if (result.amount && result.amount < amount * 0.98) {
+      if (typeof result.amount !== 'number' || !Number.isFinite(result.amount) ||
+          result.amount <= 0 || result.amount < amount * 0.98) {
         const requirement = buildPaymentRequirement({
           resource: new URL(c.req.url).pathname,
           amount,
@@ -144,8 +157,8 @@ export function x402(options: X402MiddlewareOptions): MiddlewareHandler {
         walletAddress: result.payer || '',
         network,
         txHash: result.txHash || signature,
-        amountUSDC: result.amount || amount,
-        amountMicro: String(Math.ceil((result.amount || amount) * 1_000_000)),
+        amountUSDC: result.amount,
+        amountMicro: String(Math.ceil(result.amount * 1_000_000)),
         recipient,
         resource: c.req.url,
         settledAt: new Date(),
@@ -186,23 +199,17 @@ async function defaultVerifyPayment(signature: string, network: Network): Promis
     });
 
     if (!response.ok) {
-      // Fallback: accept signature as-is for testing
       return {
-        valid: true,
-        txHash: signature,
-        payer: 'unknown',
-        amount: 0,
+        valid: false,
+        error: `Payment verification unavailable (HTTP ${response.status})`,
       };
     }
 
     return await response.json();
   } catch {
-    // Fallback: accept signature
     return {
-      valid: true,
-      txHash: signature,
-      payer: 'unknown',
-      amount: 0,
+      valid: false,
+      error: 'Payment verification unavailable',
     };
   }
 }

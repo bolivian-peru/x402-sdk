@@ -1,27 +1,37 @@
 {
   "name": "@proxies-sx/x402-solana",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Solana USDC payment verification for x402",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepack": "npm run build"
   },
-  "keywords": ["x402", "solana", "usdc", "payment", "verification"],
+  "keywords": [
+    "x402",
+    "solana",
+    "usdc",
+    "payment",
+    "verification"
+  ],
   "author": "Proxies.sx",
   "license": "MIT",
   "dependencies": {
-    "@proxies-sx/x402-core": "^1.0.0"
+    "@proxies-sx/x402-core": "^1.0.1"
   },
   "devDependencies": {
     "typescript": "^5.3.0"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

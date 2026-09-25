@@ -41,6 +41,18 @@ app.get('/data', x402({
 export default app
 ```
 
+The example returns payment quotes. To unlock paid content, provide a
+`verifyPayment(signature, network)` callback that verifies the intended recipient,
+network, confirmed transfer amount and replay protection in your payment ledger.
+Return `{ valid: true, amount, payer, txHash }` only after those checks succeed;
+`amount` is in USDC, not micro-units. Missing, zero, non-finite or insufficient
+amounts are rejected. The existing 2% amount tolerance is preserved.
+
+Without a callback, the middleware attempts the legacy
+`POST https://api.proxies.sx/v1/x402/verify` integration. That URL is not currently
+a supported payment facilitator. Verification failures return HTTP 402 and never
+unlock content. Do not treat this default path as a working payment integration.
+
 ## How x402 Works
 
 1. Agent calls your endpoint without payment
@@ -92,3 +104,12 @@ After deploying, register your agent on [xgate.run](https://xgate.run) for disco
 ## License
 
 MIT
+
+## Build and release
+
+From the workspace root, run `npm ci`, `npm run build` and `npm test`.
+The tests pack all three packages, install those tarballs into a temporary
+consumer and check their public imports and payment rejection behavior offline.
+Each package also builds on `npm pack`/publish and includes its compiled `dist`
+files. Use `npm run publish:all` only after release approval; it runs the build
+and packed-package tests before publishing.
