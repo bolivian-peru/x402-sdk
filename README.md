@@ -1,4 +1,22 @@
-# @proxies-sx/x402-sdk
+# @proxies-sx/x402-sdk (retired)
+
+> **This SDK is retired. Do not use it in new code, and replace it where it runs.**
+>
+> It predates the x402 specification it is named after and is not safe to accept payments with:
+>
+> - **A payment can be redeemed more than once.** A transaction hash is accepted again and again, and two requests at the same time both pass. It is not bound to the request, the route or the payer, and has no maximum age.
+> - **It accepts underpayment.** Amounts are computed with floating point and up to 2% less than the price is accepted.
+> - **It does not speak x402.** The 402 body is a version 1 shape with non-standard network names, and a standard x402 version 2 `PAYMENT-SIGNATURE` is rejected.
+>
+> Use the official implementation instead, maintained by the x402 Foundation: https://github.com/x402-foundation/x402
+>
+> - Server middleware: `@x402/hono`, `@x402/express` or `@x402/next`
+> - Clients that pay: `@x402/fetch` or `@x402/axios`, with `@x402/evm` and `@x402/svm`
+>
+> The npm packages `@proxies-sx/x402-core`, `@proxies-sx/x402-hono` and `@proxies-sx/x402-solana` 1.0.1 are deprecated for the same reasons.
+
+---
+
 
 x402 SDK for AI agent payments. Accept USDC on Base and Solana.
 
